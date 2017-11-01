@@ -40,7 +40,7 @@ function unserialize (data) {
   // *       returns 2: {firstName: 'Kevin', midName: 'van', surName: 'Zonneveld'}
   // *       returns 3: {'ü': 'ü', '四': '四', '𠜎': '𠜎'}
   var that = this,
-  var utf8Overhead = function (str) {
+    utf8Overhead = function (str) {
         var s = str.length
         for (var i = str.length - 1; i >= 0; i--) {
         var code = str.charCodeAt(i)
