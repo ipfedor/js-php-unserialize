@@ -1,9 +1,12 @@
+var serializer = require("./php-serialize");
+
 // Wrapper for nodejs/browser compat
 (function (window, exports) {
 
 // Public API
 exports.unserialize = unserialize;
 exports.unserializeSession = unserializeSession;
+exports.serialize = serializer.serialize;
 
 /**
  * Unserialize data taken from PHP's serialize() output
