@@ -38,17 +38,23 @@ function unserialize (data) {
   // *       returns 1: ['Kevin', 'van', 'Zonneveld']
   // *       example 2: unserialize('a:3:{s:9:"firstName";s:5:"Kevin";s:7:"midName";s:3:"van";s:7:"surName";s:9:"Zonneveld";}');
   // *       returns 2: {firstName: 'Kevin', midName: 'van', surName: 'Zonneveld'}
+  // *       returns 3: {'ü': 'ü', '四': '四', '𠜎': '𠜎'}
   var that = this,
-    utf8Overhead = function (chr) {
-      // http://phpjs.org/functions/unserialize:571#comment_95906
-      var code = chr.charCodeAt(0);
-      if (code < 0x0080) {
-        return 0;
-      }
-      if (code < 0x0800) {
-        return 1;
-      }
-      return 2;
+  var utf8Overhead = function (str) {
+        var s = str.length
+        for (var i = str.length - 1; i >= 0; i--) {
+        var code = str.charCodeAt(i)
+        if (code > 0x7f && code <= 0x7ff) {
+            s++
+        } else if (code > 0x7ff && code <= 0xffff) {
+            s += 2
+        }
+        // trail surrogate
+        if (code >= 0xDC00 && code <= 0xDFFF) {
+            i--
+        }
+        }
+        return s - 1
     },
     error = function (type, msg, filename, line) {
       throw new window[type](msg, filename, line);
