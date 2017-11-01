@@ -40,22 +40,6 @@ function unserialize (data) {
   // *       returns 2: {firstName: 'Kevin', midName: 'van', surName: 'Zonneveld'}
   // *       returns 3: {'ü': 'ü', '四': '四', '𠜎': '𠜎'}
   var that = this,
-    utf8Overhead = function (str) {
-        var s = str.length
-        for (var i = str.length - 1; i >= 0; i--) {
-        var code = str.charCodeAt(i)
-        if (code > 0x7f && code <= 0x7ff) {
-            s++
-        } else if (code > 0x7ff && code <= 0xffff) {
-            s += 2
-        }
-        // trail surrogate
-        if (code >= 0xDC00 && code <= 0xDFFF) {
-            i--
-        }
-        }
-        return s - 1
-    },
     error = function (type, msg, filename, line) {
       throw new window[type](msg, filename, line);
     },
@@ -79,7 +63,6 @@ function unserialize (data) {
       for (i = 0; i < length; i++) {
         chr = data.slice(offset + (i - 1), offset + i);
         buf.push(chr);
-        length -= utf8Overhead(chr);
       }
       return [buf.length, buf.join('')];
     },
