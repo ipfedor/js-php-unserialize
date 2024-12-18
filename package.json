@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "git://github.com/naholyr/js-php-unserialize.git"
+    "url": "git://github.com/ipfedor/js-php-unserialize.git"
   },
   "main": "php-unserialize.js",
   "scripts": {
