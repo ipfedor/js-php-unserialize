@@ -44,14 +44,14 @@ function unserialize (data) {
       throw new window[type](msg, filename, line);
     },
     read_until = function (data, offset, stopchr) {
-      var i = 2, buf = [], chr = data.slice(offset, offset + 1);
+      var i = 2, buf = [], chr = [...data].slice(offset, offset + 1).join('');
 
       while (chr != stopchr) {
         if ((i + offset) > data.length) {
           error('Error', 'Invalid');
         }
         buf.push(chr);
-        chr = data.slice(offset + (i - 1), offset + i);
+        chr = [...data].slice(offset + (i - 1), offset + i).join('');
         i += 1;
       }
       return [buf.length, buf.join('')];
@@ -61,7 +61,7 @@ function unserialize (data) {
 
       buf = [];
       for (i = 0; i < length; i++) {
-        chr = data.slice(offset + (i - 1), offset + i);
+        chr = [...data].slice(offset + (i - 1), offset + i).join('');
         buf.push(chr);
       }
       return [buf.length, buf.join('')];
@@ -78,7 +78,7 @@ function unserialize (data) {
       if (!offset) {
         offset = 0;
       }
-      dtype = (data.slice(offset, offset + 1)).toLowerCase();
+      dtype = ([...data].slice(offset, offset + 1)).join('').toLowerCase();
 
       dataoffset = offset + 2;
 
@@ -134,7 +134,7 @@ function unserialize (data) {
           readdata = res[1];
           break;
         default:
-          error('SyntaxError', 'Unknown / Unhandled data type(s): ' + dtype + ' :: ' + offset + JSON.stringify([dtype, data[offset], data.slice(offset-20, offset + 10), data]));
+          error('SyntaxError', 'Unknown / Unhandled data type(s): ' + dtype + ' :: ' + offset + JSON.stringify([dtype, data[offset], [...data].slice(offset-20, offset + 10).join(''), data]));
           break;
       }
       return [dtype, dataoffset - offset, typeconvert(readdata)];
@@ -213,11 +213,11 @@ function getClass(data, offset) {
   offset = res[0];
   res = getCount(data, offset);
   offset = res[0];
-  body = data.slice(offset - 1, offset + parseInt(res[1]) );
+  body = [...data].slice(offset - 1, offset + parseInt(res[1])).join('');
   if (body[0] !== '{' || body[body.length - 1] !== '}') {
-    throw new Error('invalid body defn: ' + JSON.stringify([body, offset, res[1], data.slice(offset-1, offset+10)]));
+    throw new Error('invalid body defn: ' + JSON.stringify([body, offset, res[1], [...data].slice(offset-1, offset+10).join('')]));
   }
-  body = body.slice(1, -1);
+  body = [...body].slice(1, -1).join('');
   try {
     body = _unserialize(body, 0)[2];
   } catch (e) {
